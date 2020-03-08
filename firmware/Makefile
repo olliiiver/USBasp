@@ -7,9 +7,9 @@
 # TARGET=atmega8    HFUSE=0xc9  LFUSE=0xef
 # TARGET=atmega48   HFUSE=0xdd  LFUSE=0xff
 # TARGET=at90s2313
-TARGET=atmega8
-HFUSE=0xc9
-LFUSE=0xef
+TARGET=atmega88
+HFUSE=0xdd
+LFUSE=0xff
 
 
 # ISP=bsd      PORT=/dev/parport0
@@ -17,8 +17,8 @@ LFUSE=0xef
 # ISP=stk500   PORT=/dev/ttyS1
 # ISP=usbasp   PORT=/dev/usb/ttyUSB0
 # ISP=stk500v2 PORT=/dev/ttyUSB0
-ISP=usbasp
-PORT=/dev/usb/ttyUSB0
+ISP=avrisp
+PORT=/dev/ttyACM1
 
 help:
 	@echo "Usage: make                same as make help"
@@ -79,13 +79,13 @@ cpp:
 	$(COMPILE) -E main.c
 
 flash:
-	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -U flash:w:main.hex
+	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -b 19200 -U flash:w:main.hex
 
 fuses:
-	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -u -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m
+	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -b 19200 -u -U hfuse:w:$(HFUSE):m -U lfuse:w:$(LFUSE):m
 
 avrdude:
-	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -v
+	avrdude -c ${ISP} -p ${TARGET} -P ${PORT} -b 19200 -v
 
 # Fuse atmega8 high byte HFUSE:
 # 0xc9 = 1 1 0 0   1 0 0 1 <-- BOOTRST (boot reset vector at 0x0000)
